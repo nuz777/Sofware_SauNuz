@@ -1,0 +1,130 @@
+{% extends "base.html" %} {% block contenido %}
+
+<h2 style="margin-bottom: 25px; font-weight: 600">Lista de Juegos</h2>
+
+{% if juegos %}
+<div class="games-grid">
+  {% for juego in juegos %}
+  <div class="card">
+    <!-- Imagen de portada -->
+    <img src="{{ juego[3] }}" alt="Portada del juego" />
+
+    <div class="card-body">
+      <h3>{{ juego[1] }}</h3>
+
+      <div class="buttons">
+        <!-- DESCARGAR -->
+        <a href="{{ juego[2] }}" target="_blank" class="btn-download">
+          ⬇ Descargar
+        </a>
+
+        <!-- ELIMINAR (ADMIN) -->
+        {% if session.admin %}
+        <form action="{{ url_for('eliminar', id=juego[0]) }}" method="POST">
+          <button
+            type="submit"
+            onclick="return confirm('¿Seguro que deseas eliminar este juego?')"
+            class="btn-delete"
+          >
+            ♻️
+          </button>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% else %}
+<p>No hay juegos agregados.</p>
+{% endif %}
+
+<style>
+  /* ===== GRID ===== */
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+  }
+
+  /* ===== CARD ===== */
+  .card {
+    background: #ffffff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+    animation: slideUp 0.6s ease;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+  }
+
+  .card img {
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+  .card h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  /* ===== BOTONES ===== */
+  .buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
+  }
+
+  .btn-download {
+    flex: 1;
+    padding: 10px;
+    background: #000;
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.3s, transform 0.2s;
+  }
+
+  .btn-download:hover {
+    background: #222;
+    transform: translateY(-2px);
+  }
+
+  .btn-delete {
+    padding: 10px 12px;
+    background: #fff;
+    color: #000;
+    border: 1px solid #000;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .btn-delete:hover {
+    background: #000;
+    color: #fff;
+  }
+
+  /* ===== ANIMACIÓN ===== */
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(25px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+{% endblock %}
